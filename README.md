@@ -7,7 +7,7 @@ Updated: 22/01/2022
 - [ ] Ultrasond-based movement:
   - [ ] Stopping based on proxmity
   - [ ] Choosing direction or backing out from dead end
-- [ ] Camera implementation
+- [x] Camera implementation (22/01/2022)
 
 ## BETA 2.0
 - [ ] Node dropping - N/A
