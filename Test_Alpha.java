@@ -18,7 +18,7 @@ public class Test_Alpha
 {
 	static Test_Alpha Test1;
 	private int Trig, Echo;
-	
+
 	private static GpioController gpio;
 	private static GpioPinDigitalOutput TrigPin, PinA, PinB, PinC, PinD, turnOnMotors;
 	private static GpioPinDigitalInput EchoPin;
@@ -29,6 +29,12 @@ public class Test_Alpha
 
 		System.out.println("Test of Movement, Camera and Ultrasound");
 		CamTest();
+
+		/*Thread.sleep(2000);
+		LeftTurn();
+		Thread.sleep(2000);
+		RightTurn();
+		*/
 
 		System.out.println("Initial ultrasonic reading: " + Test1.ultrasoundDist() + " mm");
 		Thread.sleep(3000);
@@ -127,6 +133,70 @@ public class Test_Alpha
 		
 		gpio.shutdown();
 		System.out.println("Setup Test Completed!");
+	}
+	public static void LeftTurn()
+	{
+		System.out.println("Left turn test");
+
+		turnOnMotors.high();
+
+		int time = 1300;
+		int LEFT_Motor_Forward = 12;
+		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
+				
+		if (time > 0)
+		{
+			try
+			{
+				SoftPwm.softPwmWrite(LEFT_Motor_Forward, 100);
+				Thread.sleep(time);
+			}
+			catch (InterruptedException e) 
+			{
+			e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println("Error time is too low");
+		}
+
+		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
+		System.out.println("Stopping");
+		turnOnMotors.low();
+	    gpio.shutdown();
+	}
+	public static void RightTurn()
+	{
+		System.out.println("Right turn test");
+
+		turnOnMotors.high();
+
+		int time = 1300;
+		int RIGHT_Motor_Forward = 14;
+		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
+				
+		if (time > 0)
+		{
+			try
+			{
+				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
+				Thread.sleep(time);
+			}
+			catch (InterruptedException e) 
+			{
+			e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println("Error time is too low");
+		}
+
+		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
+		System.out.println("Stopping");
+		turnOnMotors.low();
+	    gpio.shutdown();
 	}
 	public static void WheelVelocity(int LeftVelocity, int RightVelocity, int time)
 	{
