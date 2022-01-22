@@ -2,8 +2,8 @@
 Updated: 22/01/2022
 
 ## ALPHA 1.0
-- [x] Movement (L, R, F, B)
-- [x] Ultrasound
+- [x] Movement (L, R, F, B) (22/01/2022)
+- [x] Ultrasound (22/01/2022)
 - [ ] Ultrasond-based movement:
   - [ ] Stopping based on proxmity
   - [ ] Choosing direction or backing out from dead end
