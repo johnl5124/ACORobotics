@@ -3,6 +3,8 @@ Updated: 22/01/2022
 
 ## ALPHA 1.0
 - [x] Movement (L, R, F, B) (22/01/2022)
+	- [x] Seperate movements into own methods
+	- [ ] Counter for travel time whilst moving forward 
 - [x] Ultrasound (22/01/2022)
 - [ ] Ultrasond-based movement:
   - [ ] Stopping based on proxmity
