@@ -1,12 +1,12 @@
 # ACORobotics - Dissertation Project - Ant Colony Optimisation using Robotics in Dangerous Places
-Updated: 22/01/2022
+Updated: 26/01/2022
 
 ## ALPHA 1.0
 - [x] Movement (L, R, F, B) (22/01/2022)
 - [x] Ultrasound (22/01/2022)
-- [x] Ultrasond-based movement:
+- [x] Ultrasond-based movement:(26/01/2022)
   - [x] Stopping based on proxmity
-  - [x] Choosing direction or backing out from dead end
+  - [x] Choosing direction or backing out from dead end 
 - [x] Camera implementation (22/01/2022)
 
 ## BETA 2.0
@@ -23,3 +23,9 @@ Updated: 22/01/2022
 ## QoL, Future Updates and Extras
 - [ ] User-input GPIO reset
 - [ ] Ultrasonic burst and movement combined into one so they can run alongside
+
+## Refactoring
+- [ ] Seperate movement into own class
+- [ ] Seperate ultrasound into own class
+- [ ] Create Ant builder class
+- [ ] Create initialisation class
