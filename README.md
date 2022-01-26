@@ -7,11 +7,11 @@ Updated: 26/01/2022
 - [x] Ultrasond-based movement:(26/01/2022)
   - [x] Stopping based on proxmity
   - [x] Choosing direction or backing out from dead end 
-- [] Camera implementation:
-	- [] Take a photo
-	- [] Take a video of movement
-	- [] Pick up QR code
-	- [] Incorperate QR pickup inside maze navigation
+- [ ] Camera implementation:
+	- [ ] Take a photo
+	- [ ] Take a video of movement
+	- [ ] Pick up QR code
+	- [ ] Incorperate QR pickup inside maze navigation
 
 ## BETA 2.0
 - [ ] Node dropping - N/A
