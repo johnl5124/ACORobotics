@@ -1,6 +1,6 @@
 import java.io.IOException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import com.hopding.jrpicam.RPiCamera;
 import com.hopding.jrpicam.enums.Exposure;
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
@@ -17,54 +17,112 @@ import com.pi4j.wiringpi.SoftPwm;
 public class Test_Alpha 
 {
 	static Test_Alpha Test1;
-	private int Trig, Echo;
-
-	private static GpioController gpio;
-	private static GpioPinDigitalOutput TrigPin, PinA, PinB, PinC, PinD, turnOnMotors;
-	private static GpioPinDigitalInput EchoPin;
+	int Trig, Echo;
+	static int[] node;
+	static int turnCounter, turnDecision = 0;
+	static long time1 = 0, time2 = 0, TravelTime = 0;
+	static GpioController gpio;
+	static GpioPinDigitalOutput TrigPin, PinA, PinB, PinC, PinD, turnOnMotors;
+	static GpioPinDigitalInput EchoPin;
 	
 	public static void main(String[] args) throws InterruptedException
 	{		
 		Test_Alpha Test1 = new Test_Alpha(6, 23);
 
 		System.out.println("Test of Movement, Camera and Ultrasound");
-		CamTest();
-
-		/*Thread.sleep(2000);
-		LeftTurn();
-		Thread.sleep(2000);
-		RightTurn();
-		*/
+		//CamTest();
 
 		System.out.println("Initial ultrasonic reading: " + Test1.ultrasoundDist() + " mm");
 		Thread.sleep(3000);
 		System.out.println("Going!");
 
-		while (true)
+		time1 = System.currentTimeMillis();
+		while (turnCounter <= 3)
 		{
 			System.out.println("Distance: " + Test1.ultrasoundDist() + " mm");
-			
-			if (Test1.ultrasoundDist() > 250)
+
+			if (Test1.ultrasoundDist() > 250 && Test1.ultrasoundDist() <= 850)
 			{
-				System.out.println("I'm safe!");
-				WheelVelocity(75, 75, 350);
+				//System.out.println("I'm safe!");
+				Movement(100, 350);
 			}
 			else if (Test1.ultrasoundDist() >= 150 && Test1.ultrasoundDist() <= 250)
 			{
-				System.out.println("Its getting dangerous... powering down slightly");
-				WheelVelocity(50, 50, 350);
+				//System.out.println("Its getting dangerous... powering down slightly");
+				Movement(50, 350);
+			}
+			else if (Test1.ultrasoundDist() > 850)
+			{
+				System.out.println("END");
+				turnOnMotors.low();
+				gpio.shutdown();
+				break;
 			}
 			else
 			{
-				System.out.println("Theres a wall! I'm turning...");
-				WheelVelocity(0, 100, 1200);
-				//WheelVelocity(0, 100, 500);
+				Movement(0, 350);
+				time2 = System.currentTimeMillis();
+				TravelTime = (time2 - time1);
+				//System.out.println("Theres a wall! I'm turning...");
+				System.out.println("Travel time: " + TravelTime + " mm");
+				time1 = System.currentTimeMillis();
+				turnCounter ++;
+				node = new int[]{turnDecision, turnCounter, (int) TravelTime};
+				System.out.println("How many turns have I done? = " + turnCounter);
+				TravelTime = 0;
+				if (turnDecision == 0)
+				{
+					LeftTurn();
+					Thread.sleep(2000);
+					if (Test1.ultrasoundDist() < 200)
+					{
+						System.out.println("Wall too close!");
+						RightTurn();
+						Thread.sleep(2000);
+						RightTurn();
+						
+						Thread.sleep(2000);
+
+						if (Test1.ultrasoundDist() < 200)
+						{
+							System.out.println("I'm in a deadend!");
+							turnOnMotors.low();
+							gpio.shutdown();
+							break;
+						}
+						else
+						{
+							turnDecision = 0;
+						}
+					}
+					else 
+					{
+						turnDecision = 1;
+					}
+				}
+				else if (turnDecision == 1)
+				{
+					RightTurn();
+					turnDecision = 0;
+				}
 			}
 			Thread.sleep(100);
 		}
+
+		/*System.out.print("Final: ");
+		for (int i = 0; i < node.length; i++) 
+		{
+			System.out.print(node[i]);
+			System.out.println(", ");
+		}
+		*/
+
+		turnOnMotors.low();
+	    gpio.shutdown();
 	}
 	public Test_Alpha(int Echo, int Trig)
 	{
+		// CONSTRUCTOR
 		gpio = GpioFactory.getInstance();
 		
 		// pins for ultrasound
@@ -136,19 +194,54 @@ public class Test_Alpha
 	}
 	public static void LeftTurn()
 	{
-		System.out.println("Left turn test");
-
 		turnOnMotors.high();
 
-		int time = 1300;
-		int LEFT_Motor_Forward = 12;
+		int time = 650;
+		int LEFT_Motor_Backward = 10;
+		int RIGHT_Motor_Forward = 12;
+		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
+		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
+				
+		if (time > 0)
+		{
+			try
+			{
+				SoftPwm.softPwmWrite(LEFT_Motor_Backward, 100);
+				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
+
+				Thread.sleep(time);
+			}
+			catch (InterruptedException e) 
+			{
+			e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println("Error time is too low");
+		}
+
+		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
+		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
+		turnOnMotors.low();
+	    gpio.shutdown();
+	}
+	public static void RightTurn()
+	{
+		turnOnMotors.high();
+
+		int time = 650;
+		int LEFT_Motor_Forward = 14;
+		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
+		SoftPwm.softPwmCreate(RIGHT_Motor_Backward, 0, 100);
 				
 		if (time > 0)
 		{
 			try
 			{
 				SoftPwm.softPwmWrite(LEFT_Motor_Forward, 100);
+				SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 100);
 				Thread.sleep(time);
 			}
 			catch (InterruptedException e) 
@@ -162,26 +255,35 @@ public class Test_Alpha
 		}
 
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-		System.out.println("Stopping");
+		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
 		turnOnMotors.low();
 	    gpio.shutdown();
 	}
-	public static void RightTurn()
+	public static void Movement(int Velocity, int time)
 	{
-		System.out.println("Right turn test");
+		// MAY ADD ULTRASOUND IN HERE TOO? so that the robot movements constantly and checks ultrasound... more efficient electronics-wise(?)
 
 		turnOnMotors.high();
+		TravelTime = 0;
 
-		int time = 1300;
-		int RIGHT_Motor_Forward = 14;
-		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
-				
+		int LEFT_Motor_Forward = 14;
+		int RIGHT_Motor_Forward = 12;
+		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
+		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 95);
+
+		//long time1 = System.currentTimeMillis();
+
 		if (time > 0)
 		{
 			try
 			{
-				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
+				SoftPwm.softPwmWrite(LEFT_Motor_Forward, Velocity);
+				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, Velocity);
+
 				Thread.sleep(time);
+
+				//long time2 = System.currentTimeMillis();
+				//System.out.println("Time travelled: " + (time2 - time1) + " ms");
 			}
 			catch (InterruptedException e) 
 			{
@@ -193,8 +295,8 @@ public class Test_Alpha
 			System.out.println("Error time is too low");
 		}
 
+		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		System.out.println("Stopping");
 		turnOnMotors.low();
 	    gpio.shutdown();
 	}
