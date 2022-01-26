@@ -73,11 +73,16 @@ public class Test_Alpha
 				if (turnDecision == 0)
 				{
 					LeftTurn();
+					Thread.sleep(2000);
 					if (Test1.ultrasoundDist() < 200)
 					{
 						System.out.println("Wall too close!");
 						RightTurn();
+						Thread.sleep(2000);
 						RightTurn();
+						
+						Thread.sleep(2000);
+
 						if (Test1.ultrasoundDist() < 200)
 						{
 							System.out.println("I'm in a deadend!");
@@ -189,11 +194,9 @@ public class Test_Alpha
 	}
 	public static void LeftTurn()
 	{
-		System.out.println("Left turn");
-
 		turnOnMotors.high();
 
-		int time = 615;
+		int time = 650;
 		int LEFT_Motor_Backward = 10;
 		int RIGHT_Motor_Forward = 12;
 		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
@@ -225,12 +228,9 @@ public class Test_Alpha
 	}
 	public static void RightTurn()
 	{
-		System.out.println("Right turn");
-
-
 		turnOnMotors.high();
 
-		int time = 615;
+		int time = 650;
 		int LEFT_Motor_Forward = 14;
 		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
@@ -256,7 +256,6 @@ public class Test_Alpha
 
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
-		System.out.println("Stopping");
 		turnOnMotors.low();
 	    gpio.shutdown();
 	}
