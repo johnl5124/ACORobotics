@@ -73,7 +73,27 @@ public class Test_Alpha
 				if (turnDecision == 0)
 				{
 					LeftTurn();
-					turnDecision = 1;
+					if (Test1.ultrasoundDist() < 200)
+					{
+						System.out.println("Wall too close!");
+						RightTurn();
+						RightTurn();
+						if (Test1.ultrasoundDist() < 200)
+						{
+							System.out.println("I'm in a deadend!");
+							turnOnMotors.low();
+							gpio.shutdown();
+							break;
+						}
+						else
+						{
+							turnDecision = 0;
+						}
+					}
+					else 
+					{
+						turnDecision = 1;
+					}
 				}
 				else if (turnDecision == 1)
 				{
@@ -84,12 +104,13 @@ public class Test_Alpha
 			Thread.sleep(100);
 		}
 
-		System.out.print("Final: ");
+		/*System.out.print("Final: ");
 		for (int i = 0; i < node.length; i++) 
 		{
 			System.out.print(node[i]);
 			System.out.println(", ");
 		}
+		*/
 
 		turnOnMotors.low();
 	    gpio.shutdown();
@@ -168,17 +189,59 @@ public class Test_Alpha
 	}
 	public static void LeftTurn()
 	{
+		System.out.println("Left turn");
+
 		turnOnMotors.high();
 
-		int time = 1300;
-		int LEFT_Motor_Forward = 12;
+		int time = 615;
+		int LEFT_Motor_Backward = 10;
+		int RIGHT_Motor_Forward = 12;
+		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
+		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
+				
+		if (time > 0)
+		{
+			try
+			{
+				SoftPwm.softPwmWrite(LEFT_Motor_Backward, 100);
+				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
+
+				Thread.sleep(time);
+			}
+			catch (InterruptedException e) 
+			{
+			e.printStackTrace();
+			}
+		}
+		else
+		{
+			System.out.println("Error time is too low");
+		}
+
+		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
+		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
+		turnOnMotors.low();
+	    gpio.shutdown();
+	}
+	public static void RightTurn()
+	{
+		System.out.println("Right turn");
+
+
+		turnOnMotors.high();
+
+		int time = 615;
+		int LEFT_Motor_Forward = 14;
+		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
+		SoftPwm.softPwmCreate(RIGHT_Motor_Backward, 0, 100);
 				
 		if (time > 0)
 		{
 			try
 			{
 				SoftPwm.softPwmWrite(LEFT_Motor_Forward, 100);
+				SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 100);
 				Thread.sleep(time);
 			}
 			catch (InterruptedException e) 
@@ -192,37 +255,7 @@ public class Test_Alpha
 		}
 
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-		turnOnMotors.low();
-	    gpio.shutdown();
-	}
-	public static void RightTurn()
-	{
-		System.out.println("Right turn test");
-
-		turnOnMotors.high();
-
-		int time = 1300;
-		int RIGHT_Motor_Forward = 14;
-		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
-				
-		if (time > 0)
-		{
-			try
-			{
-				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
-				Thread.sleep(time);
-			}
-			catch (InterruptedException e) 
-			{
-			e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println("Error time is too low");
-		}
-
-		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
+		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
 		System.out.println("Stopping");
 		turnOnMotors.low();
 	    gpio.shutdown();
