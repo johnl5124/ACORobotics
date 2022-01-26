@@ -3,12 +3,10 @@ Updated: 22/01/2022
 
 ## ALPHA 1.0
 - [x] Movement (L, R, F, B) (22/01/2022)
-	- [x] Seperate movements into own methods
-	- [ ] Counter for travel time whilst moving forward 
 - [x] Ultrasound (22/01/2022)
-- [ ] Ultrasond-based movement:
-  - [ ] Stopping based on proxmity
-  - [ ] Choosing direction or backing out from dead end
+- [x] Ultrasond-based movement:
+  - [x] Stopping based on proxmity
+  - [x] Choosing direction or backing out from dead end
 - [x] Camera implementation (22/01/2022)
 
 ## BETA 2.0
@@ -19,7 +17,9 @@ Updated: 22/01/2022
 
 ## Testing
 - [ ] ALPHA testing
+	- [ ] Move through maze unaided 
 - [ ] BETA testing
 
-## QoL and Extras
-- [ ] User-input GPIO reset - X
+## QoL, Future Updates and Extras
+- [ ] User-input GPIO reset
+- [ ] Ultrasonic burst and movement combined into one so they can run alongside
