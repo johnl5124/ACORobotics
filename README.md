@@ -30,7 +30,8 @@ Updated: 26/01/2022
 - [ ] Ultrasonic burst and movement combined into one so they can run alongside
 
 ## Refactoring
+- [ ] Integrate into Maven and sort dependacies
 - [ ] Seperate movement into own class
 - [ ] Seperate ultrasound into own class
-- [ ] Create Ant builder class
+- [ ] Create Ant Robot builder class
 - [ ] Create initialisation class
