@@ -2,24 +2,23 @@ package com.ACORobotics;
 
 public class UltrasoundTest
 {
-	static GpioBuilder gpio = new GpioBuilder(6, 23);
+	GpioBuilder gpio = new GpioBuilder(6, 23);
 	
 	public int ultrasoundDist()
-	{
-		System.out.println("Reading ultrasound!!");
-		
+	{	
+	    gpio.end();
 		int distance = 0;
 		long start_time, end_time, rejection_1 = 1000, rejection_2 = 1000; //ns	
 		
 		try
 		{
-			gpio.turnOffPin();
+			gpio.lowPin();
 			Thread.sleep((long) 0.00002);
 			
-			gpio.turnOnPin();
+			gpio.highPin();
 			Thread.sleep((long) 0.00001);
 			
-			gpio.turnOffPin();	
+			gpio.lowPin();	
 		}
 		catch (InterruptedException e) 
 		{
@@ -28,25 +27,35 @@ public class UltrasoundTest
 		
 		while (gpio.isLowPin())
 		{
-			System.out.println("Echo is low");
-			/*try
+			try
 			{
 				Thread.sleep((long) 0.0000001);
 				rejection_1++;
 				
+				gpio.end();
 				if (rejection_1 == 100000) return -1;
 			}
 			catch (InterruptedException e) 
 			{
 				e.printStackTrace();
 			}
-			*/
 		}
 		start_time = System.nanoTime();
 		
 		while (gpio.isHighPin())
 		{
-			System.out.println("Echo is high");
+			try
+			{
+				Thread.sleep((long) 0.0000001);
+				rejection_2++;
+				
+				gpio.end();
+				if (rejection_2 == 100000) return -10;
+			}
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
 		}
 		end_time = System.nanoTime();
 		

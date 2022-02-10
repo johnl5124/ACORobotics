@@ -16,13 +16,11 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.SoftPwm;
 
-public class AlphaACORobotics implements Runnable
+public class AlphaACORobotics
 {
-	static GpioBuilder gpio = new GpioBuilder();
-	int Trig, Echo;
+	//static GpioBuilder gpio = new GpioBuilder();
 	static int[] node;
 	static int turnCounter, turnDecision = 0;
-	static long time1 = 0, time2 = 0, TravelTime = 0;
 	static GpioPinDigitalOutput PinA, PinB, PinC, PinD;
 	
 	public static void main(String[] args) throws InterruptedException 
@@ -30,8 +28,24 @@ public class AlphaACORobotics implements Runnable
 		System.out.println("Test of Movement, Camera and Ultrasound");
 		//CamTest();
 		
+		RobotMovement test2 = new RobotMovement();
+		test2.movement(-100, 2000);
+		
 		UltrasoundTest test1 = new UltrasoundTest();
-		System.out.println("Distance: " + test1.ultrasoundDist() + "mm");
+		
+		if (test1.ultrasoundDist() == -1)
+		{
+			System.out.println("Pins are constantly low!");
+		}
+		else if (test1.ultrasoundDist() == -10)
+		{
+			System.out.println("Pins are constantly high!");
+		}
+		else 
+		{
+			System.out.println("Distance: " + test1.ultrasoundDist() + "mm");
+		}
+		
 		
 		//new Thread(() -> Movement(100, 5000)).start();
 
@@ -127,179 +141,73 @@ public class AlphaACORobotics implements Runnable
 		//turnOnMotors.low();
 	    //gpio.shutdown();
 	}
-	public static void LeftTurn()
-	{
-		//turnOnMotors.high();
-
-		int time = 650;
-		int LEFT_Motor_Backward = 10;
-		int RIGHT_Motor_Forward = 12;
-		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
-		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
-				
-		if (time > 0)
-		{
-			try
-			{
-				SoftPwm.softPwmWrite(LEFT_Motor_Backward, 100);
-				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
-
-				Thread.sleep(time);
-			}
-			catch (InterruptedException e) 
-			{
-			e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println("Error time is too low");
-		}
-
-		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
-		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		//turnOnMotors.low();
-	    gpio.end();
-	}
-	public static void RightTurn()
-	{
-		//turnOnMotors.high();
-
-		int time = 650;
-		int LEFT_Motor_Forward = 14;
-		int RIGHT_Motor_Backward = 13;
-		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
-		SoftPwm.softPwmCreate(RIGHT_Motor_Backward, 0, 100);
-				
-		if (time > 0)
-		{
-			try
-			{
-				SoftPwm.softPwmWrite(LEFT_Motor_Forward, 100);
-				SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 100);
-				Thread.sleep(time);
-			}
-			catch (InterruptedException e) 
-			{
-			e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println("Error time is too low");
-		}
-
-		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
-		//turnOnMotors.low();
-	    gpio.end();
-	}
-	public static void Movement(int Velocity, int time)
-	{
-		// MAY ADD ULTRASOUND IN HERE TOO? so that the robot movements constantly and checks ultrasound... more efficient electronics-wise(?)
-
-		gpio.turnOnMotors();
-		TravelTime = 0;
-
-		int LEFT_Motor_Forward = 14;
-		int RIGHT_Motor_Forward = 12;
-		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
-		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 95);
-
-		//long time1 = System.currentTimeMillis();
-
-		if (time > 0)
-		{
-			try
-			{
-				SoftPwm.softPwmWrite(LEFT_Motor_Forward, Velocity);
-				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, Velocity);
-
-				Thread.sleep(time);
-
-				//long time2 = System.currentTimeMillis();
-				//System.out.println("Time travelled: " + (time2 - time1) + " ms");
-			}
-			catch (InterruptedException e) 
-			{
-			e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println("Error time is too low");
-		}
-
-		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		//turnOnMotors.low();
-	    gpio.end();
-	}
-	public static void WheelVelocity(int LeftVelocity, int RightVelocity, int time)
-	{
-		// motors
-		//GpioPinDigitalOutput turnOnMotors = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "m1E");	
-		
-		//turnOnMotors.high();
-		
-		// these are the correct pins!
-		int LEFT_Motor_Forward = 14;
-		int LEFT_Motor_Backward = 10;
-		int RIGHT_Motor_Forward = 12;
-		int RIGHT_Motor_Backward = 13;
-		
-		//pulse width modulation, from 0 to 100 (limits)
-		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
-		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
-		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
-		SoftPwm.softPwmCreate(RIGHT_Motor_Backward, 0, 100);
-		
-		// forwards
-		if (LeftVelocity > 0 && RightVelocity > 0)
-		{	
-			SoftPwm.softPwmWrite(LEFT_Motor_Forward, LeftVelocity);
-			SoftPwm.softPwmWrite(RIGHT_Motor_Forward, RightVelocity);
-		}
-		else if (LeftVelocity < 0 && RightVelocity < 0)
-		{
-			SoftPwm.softPwmWrite(LEFT_Motor_Backward, -LeftVelocity);
-			SoftPwm.softPwmWrite(RIGHT_Motor_Backward, -RightVelocity);
-		}
-		else if (LeftVelocity > 0 && RightVelocity == 0)
-		{
-			SoftPwm.softPwmWrite(LEFT_Motor_Forward, LeftVelocity);
-		}
-		else if (LeftVelocity == 0 && RightVelocity > 0)
-		{
-			SoftPwm.softPwmWrite(RIGHT_Motor_Forward, RightVelocity);
-		}
-		
-		if (time > 0)
-		{
-			try
-			{
-				Thread.sleep(time);
-			}
-			catch (InterruptedException e) 
-			{
-			e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println("Error time is too low");
-		}
-		
-		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
-		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
-		
-		System.out.println("Stopping");
-		//turnOnMotors.low();
-		gpio.end();
-		//gpio.unprovisionPin(turnOnMotors);
-	}
+//	public static void LeftTurn()
+//	{
+//		//turnOnMotors.high();
+//
+//		int time = 650;
+//		int LEFT_Motor_Backward = 10;
+//		int RIGHT_Motor_Forward = 12;
+//		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
+//		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
+//				
+//		if (time > 0)
+//		{
+//			try
+//			{
+//				SoftPwm.softPwmWrite(LEFT_Motor_Backward, 100);
+//				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
+//
+//				Thread.sleep(time);
+//			}
+//			catch (InterruptedException e) 
+//			{
+//			e.printStackTrace();
+//			}
+//		}
+//		else
+//		{
+//			System.out.println("Error time is too low");
+//		}
+//
+//		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
+//		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
+//		//turnOnMotors.low();
+//	    gpio.end();
+//	}
+//	public static void RightTurn()
+//	{
+//		//turnOnMotors.high();
+//
+//		int time = 650;
+//		int LEFT_Motor_Forward = 14;
+//		int RIGHT_Motor_Backward = 13;
+//		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
+//		SoftPwm.softPwmCreate(RIGHT_Motor_Backward, 0, 100);
+//				
+//		if (time > 0)
+//		{
+//			try
+//			{
+//				SoftPwm.softPwmWrite(LEFT_Motor_Forward, 100);
+//				SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 100);
+//				Thread.sleep(time);
+//			}
+//			catch (InterruptedException e) 
+//			{
+//			e.printStackTrace();
+//			}
+//		}
+//		else
+//		{
+//			System.out.println("Error time is too low");
+//		}
+//
+//		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
+//		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
+//		//turnOnMotors.low();
+//	    gpio.end();
+//	}
 
 //	public static void CamTest()
 //	{
@@ -326,9 +234,4 @@ public class AlphaACORobotics implements Runnable
 //			e.printStackTrace();
 //		}
 //	}
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
 }

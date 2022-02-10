@@ -9,7 +9,7 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class GpioBuilder 
 {
-	GpioController gpio;
+	final GpioController gpio = GpioFactory.getInstance();
 	GpioPinDigitalInput EchoPin;
 	GpioPinDigitalOutput motors, TrigPin;
 	int Echo, Trig;
@@ -17,13 +17,11 @@ public class GpioBuilder
 	public GpioBuilder()
 	{
 		// Movement CONSTRUCTOR
-		gpio = GpioFactory.getInstance();
 		motors = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "m1E");	
 	}
 	public GpioBuilder(int Echo, int Trig)
 	{
 		// Ultrasound CONSTRUCTOR
-		gpio = GpioFactory.getInstance();
 		
 		TrigPin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(Trig));
 		EchoPin = gpio.provisionDigitalInputPin(RaspiPin.getPinByAddress(Echo), PinPullResistance.PULL_DOWN);
@@ -38,11 +36,11 @@ public class GpioBuilder
 		EchoPin.isHigh();
 		return true;
 	}
-	void turnOnPin()
+	void highPin()
 	{
 		TrigPin.high();
 	}
-	void turnOffPin()
+	void lowPin()
 	{
 		TrigPin.low();
 	}
