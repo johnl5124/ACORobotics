@@ -27,7 +27,7 @@ Updated: 26/01/2022
 
 ## QoL, Future Updates and Extras
 - [ ] User-input GPIO reset
-- [ ] Ultrasonic burst and movement combined into one so they can run alongside
+- [ ] Ultrasonic burst and movement combined into one so they can run alongside (threading)
 
 ## Refactoring
 - [x] Integrate into Maven and sort dependacies
