@@ -1,3 +1,5 @@
+package com.ACORobotics;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -14,9 +16,9 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.SoftPwm;
 
-public class Test_Alpha 
+public class AlphaACORobotics 
 {
-	static Test_Alpha Test1;
+	static AlphaACORobotics Test1;
 	int Trig, Echo;
 	static int[] node;
 	static int turnCounter, turnDecision = 0;
@@ -26,8 +28,8 @@ public class Test_Alpha
 	static GpioPinDigitalInput EchoPin;
 	
 	public static void main(String[] args) throws InterruptedException
-	{		
-		Test_Alpha Test1 = new Test_Alpha(6, 23);
+	{			
+		AlphaACORobotics Test1 = new AlphaACORobotics(6, 23);
 
 		System.out.println("Test of Movement, Camera and Ultrasound");
 		//CamTest();
@@ -120,7 +122,7 @@ public class Test_Alpha
 		turnOnMotors.low();
 	    gpio.shutdown();
 	}
-	public Test_Alpha(int Echo, int Trig)
+	public AlphaACORobotics(int Echo, int Trig)
 	{
 		// CONSTRUCTOR
 		gpio = GpioFactory.getInstance();
@@ -416,29 +418,29 @@ public class Test_Alpha
 		
 		return distance;
 	}
-	public static void CamTest()
-	{
-		System.out.println("Taking picture!");
-		
-		String directory = "/home/pi/John/Photos";
-		
-		try
-		{
-			RPiCamera piCamera = new RPiCamera(directory);
-
-			piCamera.setWidth(500).setHeight(500) // Set Camera to produce 500x500 images.
-			.setBrightness(75)                // Adjust Camera's brightness setting.
-			.setExposure(Exposure.AUTO)       // Set Camera's exposure.
-			.setTimeout(2)                    // Set Camera's timeout.
-			.setAddRawBayer(true);            // Add Raw Bayer data to image files created by Camera.
-			
-			piCamera.takeStill("testPicture.jpeg");
-			System.out.println("Picture taken! And saved in: " + directory);
-		}
-		catch (FailedToRunRaspistillException|java.io.IOException|InterruptedException e)
-		{
-			
-			e.printStackTrace();
-		}
-	}
+//	public static void CamTest()
+//	{
+//		System.out.println("Taking picture!");
+//		
+//		String directory = "/home/pi/John/CamTests";
+//		
+//		try
+//		{
+//			RPiCamera piCamera = new RPiCamera(directory);
+//
+//			piCamera.setWidth(500).setHeight(500) // Set Camera to produce 500x500 images.
+//			.setBrightness(75)                // Adjust Camera's brightness setting.
+//			.setExposure(Exposure.AUTO)       // Set Camera's exposure.
+//			.setTimeout(2)                    // Set Camera's timeout.
+//			.setAddRawBayer(true);            // Add Raw Bayer data to image files created by Camera.
+//			
+//			piCamera.takeStill("testPicture.png");
+//			System.out.println("Picture taken! And saved in: " + directory);
+//		}
+//		catch (FailedToRunRaspistillException|java.io.IOException|InterruptedException e)
+//		{
+//			
+//			e.printStackTrace();
+//		}
+//	}
 }
