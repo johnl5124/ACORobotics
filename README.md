@@ -27,11 +27,16 @@ Updated: 26/01/2022
 
 ## QoL, Future Updates and Extras
 - [ ] User-input GPIO reset
-- [ ] Ultrasonic burst and movement combined into one so they can run alongside
+- [ ] Ultrasonic burst and movement combined into one so they can run alongside (threading)
 
 ## Refactoring
-- [ ] Integrate into Maven and sort dependacies
+- [x] Integrate into Maven and sort dependacies
 - [ ] Seperate movement into own class
 - [ ] Seperate ultrasound into own class
 - [ ] Create Ant Robot builder class
 - [ ] Create initialisation class
+
+## Dependencies
+- [Pi4j](https://pi4j.com/1.2/download.html)
+- [BoofCV](https://github.com/lessthanoptimal/BoofCV)
+- [JRPiCam](https://github.com/Hopding/JRPiCam)
