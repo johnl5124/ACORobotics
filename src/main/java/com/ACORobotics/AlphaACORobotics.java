@@ -1,19 +1,23 @@
 package com.ACORobotics;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import com.hopding.jrpicam.RPiCamera;
-import com.hopding.jrpicam.enums.Exposure;
-import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
+//import com.hopding.jrpicam.RPiCamera;
+//import com.hopding.jrpicam.enums.Exposure;
+//import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.SoftPwm;
 
 public class AlphaACORobotics 
@@ -27,97 +31,97 @@ public class AlphaACORobotics
 	static GpioPinDigitalOutput TrigPin, PinA, PinB, PinC, PinD, turnOnMotors;
 	static GpioPinDigitalInput EchoPin;
 	
-	public static void main(String[] args) throws InterruptedException
+	public static void main(String[] args) throws InterruptedException, IOException
 	{			
 		AlphaACORobotics Test1 = new AlphaACORobotics(6, 23);
 
 		System.out.println("Test of Movement, Camera and Ultrasound");
-		//CamTest();
+		CamTest();
 
-		System.out.println("Initial ultrasonic reading: " + Test1.ultrasoundDist() + " mm");
-		Thread.sleep(3000);
-		System.out.println("Going!");
-
-		time1 = System.currentTimeMillis();
-		while (turnCounter <= 3)
-		{
-			System.out.println("Distance: " + Test1.ultrasoundDist() + " mm");
-
-			if (Test1.ultrasoundDist() > 250 && Test1.ultrasoundDist() <= 850)
-			{
-				//System.out.println("I'm safe!");
-				Movement(100, 350);
-			}
-			else if (Test1.ultrasoundDist() >= 150 && Test1.ultrasoundDist() <= 250)
-			{
-				//System.out.println("Its getting dangerous... powering down slightly");
-				Movement(50, 350);
-			}
-			else if (Test1.ultrasoundDist() > 850)
-			{
-				System.out.println("END");
-				turnOnMotors.low();
-				gpio.shutdown();
-				break;
-			}
-			else
-			{
-				Movement(0, 350);
-				time2 = System.currentTimeMillis();
-				TravelTime = (time2 - time1);
-				//System.out.println("Theres a wall! I'm turning...");
-				System.out.println("Travel time: " + TravelTime + " mm");
-				time1 = System.currentTimeMillis();
-				turnCounter ++;
-				node = new int[]{turnDecision, turnCounter, (int) TravelTime};
-				System.out.println("How many turns have I done? = " + turnCounter);
-				TravelTime = 0;
-				if (turnDecision == 0)
-				{
-					LeftTurn();
-					Thread.sleep(2000);
-					if (Test1.ultrasoundDist() < 200)
-					{
-						System.out.println("Wall too close!");
-						RightTurn();
-						Thread.sleep(2000);
-						RightTurn();
-						
-						Thread.sleep(2000);
-
-						if (Test1.ultrasoundDist() < 200)
-						{
-							System.out.println("I'm in a deadend!");
-							turnOnMotors.low();
-							gpio.shutdown();
-							break;
-						}
-						else
-						{
-							turnDecision = 0;
-						}
-					}
-					else 
-					{
-						turnDecision = 1;
-					}
-				}
-				else if (turnDecision == 1)
-				{
-					RightTurn();
-					turnDecision = 0;
-				}
-			}
-			Thread.sleep(100);
-		}
-
-		/*System.out.print("Final: ");
-		for (int i = 0; i < node.length; i++) 
-		{
-			System.out.print(node[i]);
-			System.out.println(", ");
-		}
-		*/
+//		System.out.println("Initial ultrasonic reading: " + Test1.ultrasoundDist() + " mm");
+//		Thread.sleep(3000);
+//		System.out.println("Going!");
+//
+//		time1 = System.currentTimeMillis();
+//		while (turnCounter <= 3)
+//		{
+//			System.out.println("Distance: " + Test1.ultrasoundDist() + " mm");
+//
+//			if (Test1.ultrasoundDist() > 250 && Test1.ultrasoundDist() <= 850)
+//			{
+//				//System.out.println("I'm safe!");
+//				Movement(100, 350);
+//			}
+//			else if (Test1.ultrasoundDist() >= 150 && Test1.ultrasoundDist() <= 250)
+//			{
+//				//System.out.println("Its getting dangerous... powering down slightly");
+//				Movement(50, 350);
+//			}
+//			else if (Test1.ultrasoundDist() > 850)
+//			{
+//				System.out.println("END");
+//				turnOnMotors.low();
+//				gpio.shutdown();
+//				break;
+//			}
+//			else
+//			{
+//				Movement(0, 350);
+//				time2 = System.currentTimeMillis();
+//				TravelTime = (time2 - time1);
+//				//System.out.println("Theres a wall! I'm turning...");
+//				System.out.println("Travel time: " + TravelTime + " mm");
+//				time1 = System.currentTimeMillis();
+//				turnCounter ++;
+//				node = new int[]{turnDecision, turnCounter, (int) TravelTime};
+//				System.out.println("How many turns have I done? = " + turnCounter);
+//				TravelTime = 0;
+//				if (turnDecision == 0)
+//				{
+//					LeftTurn();
+//					Thread.sleep(2000);
+//					if (Test1.ultrasoundDist() < 200)
+//					{
+//						System.out.println("Wall too close!");
+//						RightTurn();
+//						Thread.sleep(2000);
+//						RightTurn();
+//						
+//						Thread.sleep(2000);
+//
+//						if (Test1.ultrasoundDist() < 200)
+//						{
+//							System.out.println("I'm in a deadend!");
+//							turnOnMotors.low();
+//							gpio.shutdown();
+//							break;
+//						}
+//						else
+//						{
+//							turnDecision = 0;
+//						}
+//					}
+//					else 
+//					{
+//						turnDecision = 1;
+//					}
+//				}
+//				else if (turnDecision == 1)
+//				{
+//					RightTurn();
+//					turnDecision = 0;
+//				}
+//			}
+//			Thread.sleep(100);
+//		}
+//
+//		/*System.out.print("Final: ");
+//		for (int i = 0; i < node.length; i++) 
+//		{
+//			System.out.print(node[i]);
+//			System.out.println(", ");
+//		}
+//		*/
 
 		turnOnMotors.low();
 	    gpio.shutdown();
@@ -418,10 +422,24 @@ public class AlphaACORobotics
 		
 		return distance;
 	}
-//	public static void CamTest()
-//	{
-//		System.out.println("Taking picture!");
-//		
+	static 
+	{
+		Webcam.setDriver(new V4l4jDriver());
+	}
+	public static void CamTest() throws IOException
+	{
+		System.out.println("Taking picture!");
+		
+		Webcam webcam = Webcam.getWebcamByName("/dev/video0");
+		if (webcam != null) 
+		{
+			System.out.println("Webcam: " + webcam.getName());
+		} 
+		else 
+		{
+			System.out.println("No webcam detected");
+		}
+		
 //		String directory = "/home/pi/John/CamTests";
 //		
 //		try
@@ -442,5 +460,5 @@ public class AlphaACORobotics
 //			
 //			e.printStackTrace();
 //		}
-//	}
+	}
 }
