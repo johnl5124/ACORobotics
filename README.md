@@ -35,3 +35,8 @@ Updated: 26/01/2022
 - [ ] Seperate ultrasound into own class
 - [ ] Create Ant Robot builder class
 - [ ] Create initialisation class
+
+## Dependencies
+- [Pi4j](https://pi4j.com/1.2/download.html)
+- [BoofCV](https://github.com/lessthanoptimal/BoofCV)
+- [JRPiCam](https://github.com/Hopding/JRPiCam)
