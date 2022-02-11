@@ -1,57 +1,39 @@
 package com.ACORobotics;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import com.hopding.jrpicam.RPiCamera;
-import com.hopding.jrpicam.enums.Exposure;
-import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
-import com.pi4j.io.gpio.event.GpioPinListenerDigital;
-import com.pi4j.wiringpi.SoftPwm;
-
 public class AlphaACORobotics
 {
-	//static GpioBuilder gpio = new GpioBuilder();
 	static int[] node;
 	static int turnCounter, turnDecision = 0;
-	static GpioPinDigitalOutput PinA, PinB, PinC, PinD;
 	
 	public static void main(String[] args) throws InterruptedException 
 	{		
 		System.out.println("Test of Movement, Camera and Ultrasound");
 		//CamTest();
 		
-		RobotMovement test2 = new RobotMovement();
-		test2.movement(-100, 2000);
+		RobotMovement movementObj = new RobotMovement();
+		Thread movementThread = new Thread(movementObj);
+		movementThread.start();
 		
-		UltrasoundTest test1 = new UltrasoundTest();
+		UltrasoundTest ultrasoundObj = new UltrasoundTest();
+		Thread ultrasoundThread = new Thread(ultrasoundObj);
+		ultrasoundThread.start();
 		
-		if (test1.ultrasoundDist() == -1)
-		{
-			System.out.println("Pins are constantly low!");
-		}
-		else if (test1.ultrasoundDist() == -10)
-		{
-			System.out.println("Pins are constantly high!");
-		}
-		else 
-		{
-			System.out.println("Distance: " + test1.ultrasoundDist() + "mm");
-		}
-		
-		
-		//new Thread(() -> Movement(100, 5000)).start();
-
-//		UltrasoundTest obj = new UltrasoundTest();
-//		Thread thread = new Thread(obj);
-//		thread.start();
+//		UltrasoundTest test1 = new UltrasoundTest();
+//		
+//		if (test1.ultrasoundDist() == -1)
+//		{
+//			System.out.println("Pins are constantly low!");
+//		}
+//		else if (test1.ultrasoundDist() == -10)
+//		{
+//			System.out.println("Pins are constantly high!");
+//		}
+//		else 
+//		{
+//			System.out.println("Distance: " + test1.ultrasoundDist() + "mm");
+//		}
+	}
+}
 		
 //		System.out.println("Initial ultrasonic reading: " + Test1.ultrasoundDist() + " mm");
 //		Thread.sleep(3000);
@@ -136,102 +118,4 @@ public class AlphaACORobotics
 //			System.out.print(node[i]);
 //			System.out.println(", ");
 //		}
-//		*/
 
-		//turnOnMotors.low();
-	    //gpio.shutdown();
-	}
-//	public static void LeftTurn()
-//	{
-//		//turnOnMotors.high();
-//
-//		int time = 650;
-//		int LEFT_Motor_Backward = 10;
-//		int RIGHT_Motor_Forward = 12;
-//		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
-//		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
-//				
-//		if (time > 0)
-//		{
-//			try
-//			{
-//				SoftPwm.softPwmWrite(LEFT_Motor_Backward, 100);
-//				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 100);
-//
-//				Thread.sleep(time);
-//			}
-//			catch (InterruptedException e) 
-//			{
-//			e.printStackTrace();
-//			}
-//		}
-//		else
-//		{
-//			System.out.println("Error time is too low");
-//		}
-//
-//		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
-//		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-//		//turnOnMotors.low();
-//	    gpio.end();
-//	}
-//	public static void RightTurn()
-//	{
-//		//turnOnMotors.high();
-//
-//		int time = 650;
-//		int LEFT_Motor_Forward = 14;
-//		int RIGHT_Motor_Backward = 13;
-//		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
-//		SoftPwm.softPwmCreate(RIGHT_Motor_Backward, 0, 100);
-//				
-//		if (time > 0)
-//		{
-//			try
-//			{
-//				SoftPwm.softPwmWrite(LEFT_Motor_Forward, 100);
-//				SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 100);
-//				Thread.sleep(time);
-//			}
-//			catch (InterruptedException e) 
-//			{
-//			e.printStackTrace();
-//			}
-//		}
-//		else
-//		{
-//			System.out.println("Error time is too low");
-//		}
-//
-//		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-//		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
-//		//turnOnMotors.low();
-//	    gpio.end();
-//	}
-
-//	public static void CamTest()
-//	{
-//		System.out.println("Taking picture!");
-//		
-//		String directory = "/home/pi/John/CamTests";
-//		
-//		try
-//		{
-//			RPiCamera piCamera = new RPiCamera(directory);
-//
-//			piCamera.setWidth(500).setHeight(500) // Set Camera to produce 500x500 images.
-//			.setBrightness(75)                // Adjust Camera's brightness setting.
-//			.setExposure(Exposure.AUTO)       // Set Camera's exposure.
-//			.setTimeout(2)                    // Set Camera's timeout.
-//			.setAddRawBayer(true);            // Add Raw Bayer data to image files created by Camera.
-//			
-//			piCamera.takeStill("testPicture.png");
-//			System.out.println("Picture taken! And saved in: " + directory);
-//		}
-//		catch (FailedToRunRaspistillException|java.io.IOException|InterruptedException e)
-//		{
-//			
-//			e.printStackTrace();
-//		}
-//	}
-}
