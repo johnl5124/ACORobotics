@@ -9,7 +9,6 @@ Updated: 26/01/2022
   - [x] Choosing direction or backing out from dead end 
 - [ ] Camera implementation:
 	- [x] Take a photo
-	- [ ] Take a video of movement
 	- [ ] Pick up QR code
 	- [ ] Incorperate QR pickup inside maze navigation
 
@@ -28,6 +27,7 @@ Updated: 26/01/2022
 ## QoL, Future Updates and Extras
 - [ ] User-input GPIO reset
 - [ ] Ultrasonic burst and movement combined into one so they can run alongside (threading)
+- [ ] Take a video of movement
 
 ## Refactoring
 - [x] Integrate into Maven and sort dependacies
