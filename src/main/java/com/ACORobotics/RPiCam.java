@@ -5,7 +5,7 @@ import boofcv.alg.fiducial.qrcode.QrCode;
 import boofcv.factory.fiducial.ConfigQrCode;
 import boofcv.factory.fiducial.FactoryFiducial;
 import boofcv.gui.feature.VisualizeShapes;
-import boofcv.gui.image.ShowImages;
+//import boofcv.gui.image.ShowImages;
 import boofcv.io.UtilIO;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.io.image.UtilImageIO;
@@ -31,7 +31,7 @@ public class RPiCam
 
 			piCamera.setWidth(500);
 			piCamera.setHeight(500); // Set Camera to produce 500x500 images.
-			piCamera.setBrightness(75);                // Adjust Camera's brightness setting.
+			piCamera.setBrightness(40);                // Adjust Camera's brightness setting.
 			piCamera.setExposure(Exposure.AUTO);       // Set Camera's exposure.
 			piCamera.setTimeout(2);                    // Set Camera's timeout.
 			piCamera.setAddRawBayer(true);            // Add Raw Bayer data to image files created by Camera.
@@ -47,7 +47,9 @@ public class RPiCam
 	}
 	public static void qrScan()
 	{
-		BufferedImage input = UtilImageIO.loadImageNotNull(UtilIO.pathExample("/home/pi/John/CamTests/testPicture.png"));
+		System.out.println("Scanning for QR!");
+		
+		BufferedImage input = UtilImageIO.loadImageNotNull(UtilIO.pathExample("/home/pi/John/testPicture.png"));
 		GrayU8 gray = ConvertBufferedImage.convertFrom(input, (GrayU8)null);
 
 		var config = new ConfigQrCode();
@@ -63,9 +65,13 @@ public class RPiCam
 		int strokeWidth = Math.max(4, input.getWidth()/200); // in large images the line can be too thin
 		g2.setColor(Color.GREEN);
 		g2.setStroke(new BasicStroke(strokeWidth));
-		for (QrCode qr : detections) {
+		
+		for (QrCode qr : detections) 
+		{
+			
+			
 			// The message encoded in the marker
-			System.out.println("message: '" + qr.message + "'");
+			System.out.println("Message: '" + qr.message + "'");
 
 			// Visualize its location in the image
 			VisualizeShapes.drawPolygon(qr.bounds, true, 1, g2);
@@ -74,7 +80,10 @@ public class RPiCam
 		// List of objects it thinks might be a QR Code but failed for various reasons
 		List<QrCode> failures = detector.getFailures();
 		g2.setColor(Color.RED);
-		for (QrCode qr : failures) {
+		for (QrCode qr : failures) 
+		{
+			System.out.println("No QR found...");
+			
 			// If the 'cause' is ERROR_CORRECTION or higher, then there's a decent chance it's a real marker
 			if (qr.failureCause.ordinal() < QrCode.Failure.ERROR_CORRECTION.ordinal())
 				continue;
@@ -82,6 +91,6 @@ public class RPiCam
 			VisualizeShapes.drawPolygon(qr.bounds, true, 1, g2);
 		}
 
-		ShowImages.showWindow(input, "Example QR Codes", true);
+		//ShowImages.showWindow(input, "Example QR Codes", true);
 	}
 }
