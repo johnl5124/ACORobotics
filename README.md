@@ -8,8 +8,8 @@ Updated: 26/01/2022
   - [x] Stopping based on proxmity
   - [x] Choosing direction or backing out from dead end 
 - [ ] Camera implementation:
-	- [x] Take a photo
-	- [ ] Pick up QR code
+	- [x] Take a photo (10/02/2022)
+	- [x] Pick up QR code (10/02/2022)
 	- [ ] Incorperate QR pickup inside maze navigation
 
 ## BETA 2.0
@@ -26,15 +26,15 @@ Updated: 26/01/2022
 
 ## QoL, Future Updates and Extras
 - [ ] User-input GPIO reset
-- [ ] Ultrasonic burst and movement combined into one so they can run alongside (threading)
+- [x] Ultrasonic burst and movement combined into one so they can run alongside (threading) (10/02/2022)
 - [ ] Take a video of movement
 
 ## Refactoring
-- [x] Integrate into Maven and sort dependacies
-- [ ] Seperate movement into own class
-- [ ] Seperate ultrasound into own class
+- [x] Integrate into Maven and sort dependacies (10/02/2022)
+- [x] Seperate movement into own class (11/02/2022)
+- [x] Seperate ultrasound into own class (11/02/2022)
 - [ ] Create Ant Robot builder class
-- [ ] Create initialisation class
+- [x] Create initialisation class (10/02/2022)
 
 ## Dependencies
 - [Pi4j](https://pi4j.com/1.2/download.html)
