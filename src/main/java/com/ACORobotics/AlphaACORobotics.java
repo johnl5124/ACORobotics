@@ -8,15 +8,17 @@ public class AlphaACORobotics
 	public static void main(String[] args) throws InterruptedException 
 	{		
 		System.out.println("Test of Movement, Camera and Ultrasound");
-		//CamTest();
+
+		RPiCam.takePhoto();
+		//RPiCam.qrScan();
 		
-		RobotMovement movementObj = new RobotMovement();
-		Thread movementThread = new Thread(movementObj);
-		movementThread.start();
-		
-		UltrasoundTest ultrasoundObj = new UltrasoundTest();
-		Thread ultrasoundThread = new Thread(ultrasoundObj);
-		ultrasoundThread.start();
+//		RobotMovement movementObj = new RobotMovement();
+//		Thread movementThread = new Thread(movementObj);
+//		movementThread.start();
+//		
+//		UltrasoundTest ultrasoundObj = new UltrasoundTest();
+//		Thread ultrasoundThread = new Thread(ultrasoundObj);
+//		ultrasoundThread.start();
 		
 //		UltrasoundTest test1 = new UltrasoundTest();
 //		
