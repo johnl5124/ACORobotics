@@ -4,7 +4,7 @@ import boofcv.abst.fiducial.QrCodeDetector;
 import boofcv.alg.fiducial.qrcode.QrCode;
 import boofcv.factory.fiducial.ConfigQrCode;
 import boofcv.factory.fiducial.FactoryFiducial;
-import boofcv.gui.feature.VisualizeShapes;
+//import boofcv.gui.feature.VisualizeShapes;
 //import boofcv.gui.image.ShowImages;
 import boofcv.io.UtilIO;
 import boofcv.io.image.ConvertBufferedImage;
@@ -74,7 +74,7 @@ public class RPiCam
 			System.out.println("Message: '" + qr.message + "'");
 
 			// Visualize its location in the image
-			VisualizeShapes.drawPolygon(qr.bounds, true, 1, g2);
+			//VisualizeShapes.drawPolygon(qr.bounds, true, 1, g2);
 		}
 
 		// List of objects it thinks might be a QR Code but failed for various reasons
@@ -88,7 +88,7 @@ public class RPiCam
 			if (qr.failureCause.ordinal() < QrCode.Failure.ERROR_CORRECTION.ordinal())
 				continue;
 
-			VisualizeShapes.drawPolygon(qr.bounds, true, 1, g2);
+			//VisualizeShapes.drawPolygon(qr.bounds, true, 1, g2);
 		}
 
 		//ShowImages.showWindow(input, "Example QR Codes", true);

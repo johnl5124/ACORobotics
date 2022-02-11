@@ -70,7 +70,7 @@ public class UltrasoundTest implements Runnable
 	@Override
 	public void run() 
 	{
-		System.out.println("Thread 2!");
+		System.out.println(ultrasoundDist());
 	}
 
 }

@@ -23,40 +23,29 @@
 					</archive>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			 <plugin>
+ 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-shade-plugin</artifactId>
 			    <version>3.2.4</version>
 			    <executions>
 			        <execution>
+			        	<id>unpack-dependencies</id>
 			            <phase>package</phase>
 			            <goals>
 			                <goal>shade</goal>
 			            </goals>
 			            <configuration>
-			                <minimizeJar>true</minimizeJar>
-			                <filters>
+			                <!-- <minimizeJar>true</minimizeJar> -->
+<!--  			                <filters>
 			                    <filter>
 			                        <artifact>*:*</artifact>
-			                        <excludes>
+			                        <excludes>			                        
 			                            <exclude>META-INF/*.SF</exclude>
 			                            <exclude>META-INF/*.DSA</exclude>
 			                            <exclude>META-INF/*.RSA</exclude>
 			                        </excludes>
 			                    </filter>
-			                </filters>
+			                </filters> -->
 			            </configuration>
 			        </execution>
 			    </executions>
@@ -79,11 +68,11 @@
 	    <version>0.40.1</version>
 	</dependency>
 	
-	<dependency>
+<!-- 	<dependency>
 	    <groupId>org.boofcv</groupId>
 	    <artifactId>boofcv-swing</artifactId>
 	    <version>0.40.1</version>
-	</dependency>
+	</dependency> -->
   	
 	<dependency>
 	    <groupId>com.pi4j</groupId>
@@ -98,12 +87,6 @@
 	</dependency>
 	
 	<dependency>
-	    <groupId>com.github.sarxos</groupId>
-	    <artifactId>webcam-capture-driver-v4l4j</artifactId>
-	    <version>0.3.12</version>
-	</dependency>
-	
-	<dependency>
 	    <groupId>org.slf4j</groupId>
 	    <artifactId>slf4j-api</artifactId>
 	    <version>2.0.0-alpha6</version>
@@ -114,19 +97,6 @@
 	    <artifactId>slf4j-simple</artifactId>
 	    <version>2.0.0-alpha6</version>
 	    <scope>test</scope>
-	</dependency>
-	
-	
-	<dependency>
-	  <groupId>com.github.sarxos</groupId>
-	  <artifactId>v4l4j</artifactId>
-	  <version>0.9.1-r507</version>
-	</dependency>
-	
-	<dependency>
-	  <groupId>com.github.sarxos</groupId>
-	  <artifactId>webcam-capture</artifactId>
-	  <version>0.3.12</version>
 	</dependency>
 	
   </dependencies>
