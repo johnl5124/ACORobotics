@@ -1,12 +1,14 @@
 # ACORobotics - Dissertation Project - Ant Colony Optimisation using Robotics in Dangerous Places
-Updated: 26/01/2022
+Updated: 13/02/2022
 
 ## ALPHA 1.0
-- [x] Movement (L, R, F, B) (22/01/2022)
-- [x] Ultrasound (22/01/2022)
-- [x] Ultrasond-based movement:(26/01/2022)
-  - [x] Stopping based on proxmity
-  - [x] Choosing direction or backing out from dead end 
+- [x] MovementV1 (L, R, F, B) (22/01/2022)
+- [x] UltrasoundV1 (22/01/2022)
+- [] MovementV2
+- [x] UltrasoundV2 (13/02/2022)
+- [] Ultrasond-based movement:(26/01/2022)
+  - [] Stopping based on proxmity
+  - [] Choosing direction or backing out from dead end 
 - [ ] Camera implementation:
 	- [x] Take a photo (10/02/2022)
 	- [x] Pick up QR code (10/02/2022)
