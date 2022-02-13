@@ -1,76 +1,87 @@
 package com.ACORobotics;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.RaspiPin;
+
 public class UltrasoundTest implements Runnable
 {
-	GpioBuilder gpio = new GpioBuilder(6, 23);
+	//GpioBuilder gpio = new GpioBuilder(6, 23);
+	static GpioController gpio;
+	static GpioPinDigitalInput EchoPin;
+	static GpioPinDigitalOutput TrigPin;
+	private int counter = 0;
 	
-	public int ultrasoundDist() 
-	{	
+	public UltrasoundTest(int Echo, int Trig)
+	{
+		gpio = GpioFactory.getInstance();
+		
+		// pins for ultrasound
+		TrigPin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(Trig));
+		EchoPin = gpio.provisionDigitalInputPin(RaspiPin.getPinByAddress(Echo), PinPullResistance.PULL_DOWN);
+	}
+	
+	public int ultraSonic()
+	{
 		int distance = 0;
-		long start_time, end_time, rejection_1 = 1000, rejection_2 = 1000; //ns	
+		long start_time, end_time;
 		
 		try
-		{
-			Thread.sleep(1000);
-			
-			gpio.lowPin();
-			Thread.sleep((long) 0.00002);
-			
-			gpio.highPin();
-			Thread.sleep((long) 0.00001);
-			
-			gpio.lowPin();	
-		}
-		catch (InterruptedException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		while (gpio.isLowPin())
-		{
-			try
-			{
-				Thread.sleep((long) 0.0000001);
-				rejection_1++;
+			{			
+				//gpio.lowTrigPin();
+				TrigPin.low();
+				Thread.sleep((long) 0.00002);
 				
-				gpio.end();
-				if (rejection_1 == 100000) return -1;
+				//gpio.highTrigPin();
+				TrigPin.high();
+				Thread.sleep((long) 0.00001);
+				
+				//gpio.lowTrigPin();
+				TrigPin.low();
 			}
 			catch (InterruptedException e) 
 			{
 				e.printStackTrace();
 			}
-		}
-		start_time = System.nanoTime();
-		
-		while (gpio.isHighPin())
-		{
-			try
-			{
-				Thread.sleep((long) 0.0000001);
-				rejection_2++;
-				
-				gpio.end();
-				if (rejection_2 == 100000) return -10;
+			
+			while (EchoPin.isLow())
+			{			
+				//System.out.println("Low!");
+				//break;
 			}
-			catch (InterruptedException e) 
+			start_time = System.nanoTime();
+			
+			while (EchoPin.isHigh())
 			{
-				e.printStackTrace();
+				//System.out.println("High!");
+				//break;
 			}
-		}
-		end_time = System.nanoTime();
-		
-		//dist in mm
-		distance = (int) ((end_time - start_time) / 5882.35294118);
-		
-		gpio.end();
-		
-		return distance;
+			
+			end_time = System.nanoTime();
+			
+			//dist in mm
+			distance = (int) ((end_time - start_time) / 5882.35294118);
+			
+			gpio.shutdown();
+			
+			return distance;
 	}
+	
 	@Override
 	public void run() 
-	{
-		System.out.println(ultrasoundDist());
+	{		
+		while (counter <= 10000)
+		{
+			if (counter % 50 == 0)
+			{
+				System.out.println("Distance = " + ultraSonic() + "mm |" + " Counter = " + counter);
+			}
+			counter ++;
+		}
+		System.out.println("Shutting down");
+		gpio.shutdown();
 	}
-
 }

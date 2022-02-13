@@ -2,47 +2,18 @@ package com.ACORobotics;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 
-public class GpioBuilder 
+public class GpioBuilder
 {
 	final GpioController gpio = GpioFactory.getInstance();
-	GpioPinDigitalInput EchoPin;
-	GpioPinDigitalOutput motors, TrigPin;
-	int Echo, Trig;
+	private GpioPinDigitalOutput motors;
 	
 	public GpioBuilder()
 	{
 		// Movement CONSTRUCTOR
 		motors = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "m1E");	
-	}
-	public GpioBuilder(int Echo, int Trig)
-	{
-		// Ultrasound CONSTRUCTOR
-		
-		TrigPin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(Trig));
-		EchoPin = gpio.provisionDigitalInputPin(RaspiPin.getPinByAddress(Echo), PinPullResistance.PULL_DOWN);
-	}
-	boolean isLowPin()
-	{
-		EchoPin.isLow();
-		return false;
-	}
-	boolean isHighPin()
-	{
-		EchoPin.isHigh();
-		return true;
-	}
-	void highPin()
-	{
-		TrigPin.high();
-	}
-	void lowPin()
-	{
-		TrigPin.low();
 	}
 	void turnOnMotors()
 	{
@@ -54,6 +25,41 @@ public class GpioBuilder
 	}
 	void end()
 	{
+		System.out.println("Shutting down");
 		gpio.shutdown();
 	}
 }
+
+//public GpioBuilder(int echo, int trig)
+//{	
+//	// Ultrasound CONSTRUCTOR
+//	
+//	trigPin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(trig), PinState.LOW);	
+//	echoPin = gpio.provisionDigitalInputPin(RaspiPin.getPinByAddress(echo), PinPullResistance.PULL_DOWN);
+//}
+//void getEchoPinState()
+//{
+//	echoPin.getState();
+//}
+//void getTrigPinState()
+//{
+//	trigPin.getState();
+//}
+//boolean isEchoPinLow()
+//{
+//	echoPin.isLow();
+//	return false;
+//}
+//boolean isEchoPinHigh()
+//{
+//	echoPin.isHigh();
+//	return true;
+//}
+//void highTrigPin()
+//{
+//	trigPin.high();
+//}
+//void lowTrigPin()
+//{
+//	trigPin.low();
+//}

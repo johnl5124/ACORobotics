@@ -3,7 +3,8 @@ package com.ACORobotics;
 public class AlphaACORobotics
 {
 	static int[] node;
-	static int turnCounter, turnDecision = 0;
+	static int turnCounter;
+	int turnDecision = 0;
 	
 	public static void main(String[] args) throws InterruptedException 
 	{		
@@ -12,14 +13,26 @@ public class AlphaACORobotics
 //		RPiCam.takePhoto();
 //		RPiCam.qrScan();
 		
-		RobotMovement movementObj = new RobotMovement();
-		Thread movementThread = new Thread(movementObj);
-		movementThread.start();
+		UltrasoundTest ultrasoundObj = new UltrasoundTest(6, 23);	
+		System.out.println("Initial distance reading: " + ultrasoundObj.ultraSonic() + "mm");
 		
-		UltrasoundTest ultrasoundObj = new UltrasoundTest();
+		Thread.sleep(2000);
+		
+		// thread starting
 		Thread ultrasoundThread = new Thread(ultrasoundObj);
 		ultrasoundThread.start();
 		
+//		RobotMovement movementObj = new RobotMovement();
+//		Thread movementThread = new Thread(movementObj);
+//		movementThread.start();
+		
+		if (ultrasoundObj.ultraSonic() < 100)
+		{
+			GpioBuilder shutdown = new GpioBuilder();
+			shutdown.end();
+		}
+		
+
 //		UltrasoundTest test1 = new UltrasoundTest();
 //		
 //		if (test1.ultrasoundDist() == -1)

@@ -120,8 +120,6 @@ public class RobotMovement implements Runnable
 	@Override
 	public void run() 
 	{
-		System.out.println("Moving forward for 2 secs!");
-		
 		Forward();		
 	}
 }
