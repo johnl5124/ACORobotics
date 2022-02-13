@@ -4,11 +4,11 @@ Updated: 13/02/2022
 ## ALPHA 1.0
 - [x] MovementV1 (L, R, F, B) (22/01/2022)
 - [x] UltrasoundV1 (22/01/2022)
-- [] MovementV2
+- [ ] MovementV2
 - [x] UltrasoundV2 (13/02/2022)
-- [] Ultrasond-based movement:(26/01/2022)
-  - [] Stopping based on proxmity
-  - [] Choosing direction or backing out from dead end 
+- [ ] Ultrasond-based movement:(26/01/2022)
+  - [ ] Stopping based on proxmity
+  - [ ] Choosing direction or backing out from dead end 
 - [ ] Camera implementation:
 	- [x] Take a photo (10/02/2022)
 	- [x] Pick up QR code (10/02/2022)
