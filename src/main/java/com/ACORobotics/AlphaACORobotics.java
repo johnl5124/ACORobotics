@@ -5,33 +5,77 @@ public class AlphaACORobotics
 	static int[] node;
 	static int turnCounter;
 	int turnDecision = 0;
-	static UltrasoundTest ultrasoundObj = new UltrasoundTest(6, 23);
-	static RobotMovement movementObj = new RobotMovement();
 	
 	public static void main(String[] args) throws InterruptedException
 	{		
 		System.out.println("Test of Movement, Camera and Ultrasound");
 
+		Thread.sleep(1000);
+		
+		UltrasoundTest t1 = new UltrasoundTest("USThread");
+		RobotMovement t2 = new RobotMovement("MovementThread");
+
+		while (true)
+		{
+			if (t1.ultraSonic() >= 200)
+			{
+				System.out.println("Distance = " + t1.ultraSonic() + "mm");
+				Thread.sleep(350);
+			}
+			else
+			{
+				System.out.println("Exiting...");
+				
+				t2.shutdown();
+				t2.stop();
+				
+				t1.shutdown();
+				t1.stop();
+				break;
+			}
+		}	
+
 //		RPiCam.takePhoto();
 //		RPiCam.qrScan();
 			
-		System.out.println("Initial distance reading: " + ultrasoundObj.ultraSonic() + "mm");
+		//System.out.println("Initial distance reading: " + t1.ultraSonic() + "mm");
 		
-		Thread.sleep(2000);
-		
-		//Thread ultrasoundThread = new Thread(ultrasoundObj);
-		Thread movementThread = new Thread(movementObj);
-		
-		movementThread.start();
+//		Thread.sleep(2000);
 //		
-		System.out.println(movementThread.getState());
+//		t1.stop();
+		
+		
+		
+//		Thread ultrasoundThread = new Thread(ultrasoundObj);
+//		Thread movementThread = new Thread(movementObj);
+//	
+//		if (ultrasoundObj.ultraSonic() >= 250)
+//		{
+//			System.out.println("I'm safe!");
+//			
+//			movementThread.start();
+//			System.out.println(movementThread.getState());
+//			
+//			ultrasoundThread.start();
+//			//System.out.println(ultrasoundThread.getState());
+//		}
+//		else if (ultrasoundObj.ultraSonic() < 250)
+//		{		
+//			System.out.println("I'm not safe! Stopping!");
+//			
+//			movementObj.shutdown();
+//			ultrasoundObj.shutdown();
+//			movementThread.interrupt();
+//			System.out.println(movementThread.getState());
+//				
+//		}
+		
 
-		Thread.sleep(3000);
+//		
+
 		
 		
-		movementObj.shutdown();
-		movementThread.interrupt();
-		System.out.println(movementThread.getState());
+
 		
 		//System.exit(0);
 		

@@ -1,10 +1,5 @@
 package com.ACORobotics;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -18,15 +13,27 @@ public class UltrasoundTest implements Runnable
 	static GpioController gpio;
 	static GpioPinDigitalInput EchoPin;
 	static GpioPinDigitalOutput TrigPin;
-	private int counter = 0;
+	private String name;
+	Thread t;
+	private boolean exit;
 	
-	public UltrasoundTest(int Echo, int Trig)
+	public UltrasoundTest(String threadName)
 	{
+		//int Echo = 6, int Trig = 23 
+		
+		// gpio instance
 		gpio = GpioFactory.getInstance();
 		
 		// pins for ultrasound
-		TrigPin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(Trig));
-		EchoPin = gpio.provisionDigitalInputPin(RaspiPin.getPinByAddress(Echo), PinPullResistance.PULL_DOWN);
+		TrigPin = gpio.provisionDigitalOutputPin(RaspiPin.getPinByAddress(23));
+		EchoPin = gpio.provisionDigitalInputPin(RaspiPin.getPinByAddress(6), PinPullResistance.PULL_DOWN);
+	
+		// thread creation
+		name = threadName;
+		t = new Thread(this, name);
+		System.out.println("New thread = " + name);
+		exit = false;
+		t.start();
 	}
 	
 	public int ultraSonic()
@@ -74,27 +81,35 @@ public class UltrasoundTest implements Runnable
 			
 			return distance;
 	}
+
+	public void stop()
+	{
+		exit = true;
+	}
 	public void shutdown()
 	{
-		System.out.println("Shutting down!");
 		gpio.shutdown();
 	}
-	
 	@Override
 	public void run() 
-	{		
-		for (int i = 0; i < 1000; i++)
-		{	
-			System.out.println("Distance = " + ultraSonic() + "mm");
+	{	
+		ultraSonic();
 
-			
-			//System.out.println("Distance = " + ultraSonic() + "mm");
-
-//			if (counter % 50 == 0)
+		
+//		while (ultraSonic() > 250)
+//		{
+//			try
 //			{
-//				System.out.println("Distance = " + ultraSonic() + "mm |" + " Counter = " + counter);
+//				System.out.println("Distance = " + ultraSonic() + "mm");
+//				Thread.sleep(500);
 //			}
-//			counter ++;
-		}
+//			catch (InterruptedException e)
+//			{
+//				System.out.println("Something went wrong...");
+//				System.exit(0);
+//			}
+//		}
+//		stop();
+//		System.out.println(name + " stopped");
 	}
 }

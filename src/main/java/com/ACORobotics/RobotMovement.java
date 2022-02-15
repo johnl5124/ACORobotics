@@ -10,14 +10,25 @@ public class RobotMovement implements Runnable
 {
 	final GpioController gpio = GpioFactory.getInstance();
 	private GpioPinDigitalOutput motors;
-	static long TravelTime;
 	private int LEFT_Motor_Forward = 14, RIGHT_Motor_Forward = 12;
+	private String name;
+	Thread t;
+	private boolean exit;
 	
-	public RobotMovement()
+	public RobotMovement(String threadName)
 	{
 		motors = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "m1E");
+		
+		name = threadName;
+		t = new Thread(this, name);
+		System.out.println("New thread = " + name);
+		exit = false;
+		t.start();
 	}
-	
+	public void stop()
+	{
+		exit = true;
+	}
 	public void Forward()
 	{
 		int Velocity = 100;
@@ -109,6 +120,8 @@ public class RobotMovement implements Runnable
 	@Override
 	public void run() 
 	{
+		System.out.println("Moving forward");
+		
 		Forward();
 	}
 }
