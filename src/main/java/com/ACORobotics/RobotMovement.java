@@ -29,7 +29,7 @@ public class RobotMovement implements Runnable
 	{
 		exit = true;
 	}
-	public void Forward()
+	public void forward()
 	{
 		int Velocity = 100;
 				
@@ -41,11 +41,11 @@ public class RobotMovement implements Runnable
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, Velocity);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, Velocity);		
 	}
-	public void LeftTurn()
+	public void leftTurn()
 	{
 		motors.high();
 
-		int time = 625;
+		int time = 630;
 		int LEFT_Motor_Backward = 10;
 		int RIGHT_Motor_Forward = 12;
 		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
@@ -75,11 +75,11 @@ public class RobotMovement implements Runnable
 		motors.low();
 		gpio.shutdown();
 	}
-	public void RightTurn()
+	public void rightTurn()
 	{
 		motors.high();
 
-		int time = 625;
+		int time = 630;
 		int LEFT_Motor_Forward = 14;
 		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
@@ -118,6 +118,6 @@ public class RobotMovement implements Runnable
 	@Override
 	public void run() 
 	{	
-		Forward();
+		forward();
 	}
 }
