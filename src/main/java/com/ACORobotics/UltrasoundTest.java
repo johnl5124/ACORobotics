@@ -1,5 +1,10 @@
 package com.ACORobotics;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -69,19 +74,27 @@ public class UltrasoundTest implements Runnable
 			
 			return distance;
 	}
+	public void shutdown()
+	{
+		System.out.println("Shutting down!");
+		gpio.shutdown();
+	}
 	
 	@Override
 	public void run() 
 	{		
-		while (counter <= 10000)
-		{
-			if (counter % 50 == 0)
-			{
-				System.out.println("Distance = " + ultraSonic() + "mm |" + " Counter = " + counter);
-			}
-			counter ++;
+		for (int i = 0; i < 1000; i++)
+		{	
+			System.out.println("Distance = " + ultraSonic() + "mm");
+
+			
+			//System.out.println("Distance = " + ultraSonic() + "mm");
+
+//			if (counter % 50 == 0)
+//			{
+//				System.out.println("Distance = " + ultraSonic() + "mm |" + " Counter = " + counter);
+//			}
+//			counter ++;
 		}
-		System.out.println("Shutting down");
-		gpio.shutdown();
 	}
 }

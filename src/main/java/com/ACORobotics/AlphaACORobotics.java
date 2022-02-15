@@ -5,32 +5,54 @@ public class AlphaACORobotics
 	static int[] node;
 	static int turnCounter;
 	int turnDecision = 0;
+	static UltrasoundTest ultrasoundObj = new UltrasoundTest(6, 23);
+	static RobotMovement movementObj = new RobotMovement();
 	
-	public static void main(String[] args) throws InterruptedException 
+	public static void main(String[] args) throws InterruptedException
 	{		
 		System.out.println("Test of Movement, Camera and Ultrasound");
 
 //		RPiCam.takePhoto();
 //		RPiCam.qrScan();
-		
-		UltrasoundTest ultrasoundObj = new UltrasoundTest(6, 23);	
+			
 		System.out.println("Initial distance reading: " + ultrasoundObj.ultraSonic() + "mm");
 		
 		Thread.sleep(2000);
 		
-		// thread starting
-		Thread ultrasoundThread = new Thread(ultrasoundObj);
-		ultrasoundThread.start();
+		//Thread ultrasoundThread = new Thread(ultrasoundObj);
+		Thread movementThread = new Thread(movementObj);
 		
-//		RobotMovement movementObj = new RobotMovement();
-//		Thread movementThread = new Thread(movementObj);
-//		movementThread.start();
+		movementThread.start();
+//		
+		System.out.println(movementThread.getState());
+
+		Thread.sleep(3000);
 		
-		if (ultrasoundObj.ultraSonic() < 100)
-		{
-			GpioBuilder shutdown = new GpioBuilder();
-			shutdown.end();
-		}
+		
+		movementObj.shutdown();
+		movementThread.interrupt();
+		System.out.println(movementThread.getState());
+		
+		//System.exit(0);
+		
+//		if (ultrasoundObj.ultraSonic() >= 250)
+//		{
+//			System.out.println("Going!");
+//
+//			// thread starting
+//			ultrasoundThread.start();
+//			movementThread.start();	
+//		}
+//		else
+//		{
+//			System.out.println("Stopping!");
+//			
+//			ultrasoundThread.interrupt();
+//			movementThread.interrupt();
+//			ultrasoundObj.shutdown();
+//			movementObj.shutdown();
+//			System.exit(0);
+//		}
 		
 
 //		UltrasoundTest test1 = new UltrasoundTest();
@@ -48,6 +70,8 @@ public class AlphaACORobotics
 //			System.out.println("Distance: " + test1.ultrasoundDist() + "mm");
 //		}
 	}
+
+
 }
 		
 //		System.out.println("Initial ultrasonic reading: " + Test1.ultrasoundDist() + " mm");

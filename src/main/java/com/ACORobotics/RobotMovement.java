@@ -1,58 +1,38 @@
 package com.ACORobotics;
 
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
 
 public class RobotMovement implements Runnable
 {
-	GpioBuilder gpio = new GpioBuilder();
+	final GpioController gpio = GpioFactory.getInstance();
+	private GpioPinDigitalOutput motors;
 	static long TravelTime;
+	private int LEFT_Motor_Forward = 14, RIGHT_Motor_Forward = 12;
+	
+	public RobotMovement()
+	{
+		motors = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_25, "m1E");
+	}
 	
 	public void Forward()
 	{
-		// i think i can remove 'time'... but we'll see
-		
-		int time = 2000, Velocity = 100;
+		int Velocity = 100;
 				
-		gpio.turnOnMotors();
-		TravelTime = 0;
+		motors.high();
 
-		int LEFT_Motor_Forward = 14;
-		int RIGHT_Motor_Forward = 12;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
 		SoftPwm.softPwmCreate(RIGHT_Motor_Forward, 0, 100);
-
-		//long time1 = System.currentTimeMillis();
-
-		if (time > 0)
-		{
-			try
-			{
-				SoftPwm.softPwmWrite(LEFT_Motor_Forward, Velocity);
-				SoftPwm.softPwmWrite(RIGHT_Motor_Forward, Velocity);
-
-				Thread.sleep(time);
-
-				//long time2 = System.currentTimeMillis();
-				//System.out.println("Time travelled: " + (time2 - time1) + " ms");
-			}
-			catch (InterruptedException e) 
-			{
-			e.printStackTrace();
-			}
-		}
-		else
-		{
-			System.out.println("Error time is too low");
-		}
-
-		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
-		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		gpio.turnOffMotors();
-		gpio.end();
+		
+		SoftPwm.softPwmWrite(LEFT_Motor_Forward, Velocity);
+		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, Velocity);		
 	}
 	public void LeftTurn()
 	{
-		gpio.turnOnMotors();
+		motors.high();
 
 		int time = 575;
 		int LEFT_Motor_Backward = 10;
@@ -81,12 +61,12 @@ public class RobotMovement implements Runnable
 
 		SoftPwm.softPwmWrite(LEFT_Motor_Backward, 0);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		gpio.turnOffMotors();
-	    gpio.end();
+		motors.low();
+		gpio.shutdown();
 	}
 	public void RightTurn()
 	{
-		gpio.turnOnMotors();
+		motors.high();
 
 		int time = 575;
 		int LEFT_Motor_Forward = 14;
@@ -114,12 +94,21 @@ public class RobotMovement implements Runnable
 
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Backward, 0);
-		gpio.turnOffMotors();
-	    gpio.end();
+		motors.low();
+		gpio.shutdown();
+	}
+	public void shutdown()
+	{
+		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
+		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
+		
+		System.out.println("Shutting down!");
+		motors.low();
+		gpio.shutdown();
 	}
 	@Override
 	public void run() 
 	{
-		Forward();		
+		Forward();
 	}
 }

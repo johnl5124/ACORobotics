@@ -1,11 +1,14 @@
 package com.ACORobotics;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
 
-public class GpioBuilder
+public class GpioBuilder  
 {
 	final GpioController gpio = GpioFactory.getInstance();
 	private GpioPinDigitalOutput motors;
@@ -26,7 +29,14 @@ public class GpioBuilder
 	void end()
 	{
 		System.out.println("Shutting down");
+		motors.low();
 		gpio.shutdown();
+	}
+	void killProgram()
+	{		
+		System.out.println("Goodbye");
+		gpio.shutdown();
+		System.exit(0);
 	}
 }
 
