@@ -21,7 +21,7 @@ public class RobotMovement implements Runnable
 		
 		name = threadName;
 		t = new Thread(this, name);
-		System.out.println("New thread = " + name);
+		//System.out.println("New thread = " + name);
 		exit = false;
 		t.start();
 	}
@@ -45,7 +45,7 @@ public class RobotMovement implements Runnable
 	{
 		motors.high();
 
-		int time = 575;
+		int time = 625;
 		int LEFT_Motor_Backward = 10;
 		int RIGHT_Motor_Forward = 12;
 		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
@@ -79,7 +79,7 @@ public class RobotMovement implements Runnable
 	{
 		motors.high();
 
-		int time = 575;
+		int time = 625;
 		int LEFT_Motor_Forward = 14;
 		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
@@ -112,16 +112,12 @@ public class RobotMovement implements Runnable
 	{
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, 0);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, 0);
-		
-		System.out.println("Shutting down!");
 		motors.low();
 		gpio.shutdown();
 	}
 	@Override
 	public void run() 
-	{
-		System.out.println("Moving forward");
-		
+	{	
 		Forward();
 	}
 }

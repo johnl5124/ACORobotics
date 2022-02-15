@@ -31,7 +31,7 @@ public class UltrasoundTest implements Runnable
 		// thread creation
 		name = threadName;
 		t = new Thread(this, name);
-		System.out.println("New thread = " + name);
+		//System.out.println("New thread = " + name);
 		exit = false;
 		t.start();
 	}
