@@ -47,21 +47,28 @@ public class AlphaACORobotics
 				// stop movement
 				t2.shutdown();
 				
+				System.out.println("------------------ " + "TIME STATS" + " ------------------");
+				
+				// timer calculation
+				time2 = System.currentTimeMillis();
+				
+				System.out.println("TRAVEL TIME = " + traveltime);
+				
+				//time1 = System.currentTimeMillis();
+				
 				// turn counter increment 
 				turnCounter++;
 				
 				Thread.sleep(500);
 				
 				System.out.println("-------------------- " + "RESET" + " --------------------");
-				
 				traveltime = 0;
+				
+//				node = new int[]{turnCounter, currentTurn, (int) traveltime};
+				
 				// left turn
 				if (nextTurn == 0)
-				{				
-					// travel time calculation 
-					time2 = System.currentTimeMillis();
-					traveltime = (time2 - time1);
-					
+				{								
 					// left turn is 0
 					t2.leftTurn();
 					System.out.println("Turn number " + turnCounter + " distance: " + t1.ultraSonic() + "mm");
@@ -93,24 +100,28 @@ public class AlphaACORobotics
 						}
 						else
 						{
+							// THIS IS A RIGHT TURN IF WALL IS THERE ON LEFT TURN
+							
 							currentTurn = 1;
 							nextTurn = 0;
-
-							// travel time calculation 
-							time2 = System.currentTimeMillis();
+				
 							traveltime = (time2 - time1);
+
+							// time starts again (?)
+							System.out.println("---------------- " + "TIME RESTARTS" + " ----------------");
 							time1 = System.currentTimeMillis();
 						}
 					}
 					else
 					{
+						// THIS IS A NORMAL LEFT TURN
+						
 						currentTurn = 0;
 						nextTurn = 1;
-
-						// travel time calculation 
-						time2 = System.currentTimeMillis();
-						traveltime = (time2 - time1);
 						
+						traveltime = (time2 - time1);
+						// time starts again (?)
+						System.out.println("---------------- " + "TIME RESTARTS" + " ----------------");
 						time1 = System.currentTimeMillis();
 					}
 				}
@@ -120,24 +131,24 @@ public class AlphaACORobotics
 					currentTurn = 1;
 					nextTurn = 0;
 					
-					// travel time calculation 
-					time2 = System.currentTimeMillis();
-					traveltime = (time2 - time1);
-					
-					time1 = System.currentTimeMillis();
-					
 					// right turn
 					t2.rightTurn();
 					System.out.println("Turn number " + turnCounter + " distance: " + t1.ultraSonic() + "mm");
 					Thread.sleep(1000);
+					
+					traveltime = (time2 - time1);
+					// time starts again (?)
+					System.out.println("---------------- " + "TIME RESTARTS" + " ----------------");
+					time1 = System.currentTimeMillis();
 				}
-				// int array node for node data storage
 				node = new int[]{turnCounter, currentTurn, (int) traveltime};
+				
 				// arraylist to store the int array
 				nodeList.add(Arrays.toString(node));
 				Thread.sleep(250);
 			}
 		}
+			
 		System.out.println("----------------------------------------------");
 		System.out.println("------------------ Exiting -------------------");
 		

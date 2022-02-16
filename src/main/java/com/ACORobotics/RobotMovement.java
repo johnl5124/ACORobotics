@@ -45,7 +45,7 @@ public class RobotMovement implements Runnable
 	{
 		motors.high();
 
-		int time = 680;
+		int time = 725;
 		int LEFT_Motor_Backward = 10;
 		int RIGHT_Motor_Forward = 12;
 		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
@@ -79,7 +79,7 @@ public class RobotMovement implements Runnable
 	{
 		motors.high();
 
-		int time = 680;
+		int time = 725;
 		int LEFT_Motor_Forward = 14;
 		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
