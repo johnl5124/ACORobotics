@@ -94,22 +94,5 @@ public class UltrasoundTest implements Runnable
 	public void run() 
 	{	
 		ultraSonic();
-
-		
-//		while (ultraSonic() > 250)
-//		{
-//			try
-//			{
-//				System.out.println("Distance = " + ultraSonic() + "mm");
-//				Thread.sleep(500);
-//			}
-//			catch (InterruptedException e)
-//			{
-//				System.out.println("Something went wrong...");
-//				System.exit(0);
-//			}
-//		}
-//		stop();
-//		System.out.println(name + " stopped");
 	}
 }

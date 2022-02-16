@@ -7,7 +7,7 @@ public class AlphaACORobotics
 {
 	static int[] node;
 	static ArrayList<String> nodeList = new ArrayList<String>();
-	static int turnCounter = 0, turnDecision = 0;
+	static int turnCounter = 0, currentTurn = 0, nextTurn = 0;
 	static long time1, time2, traveltime;
 	
 	public static void main(String[] args) throws InterruptedException
@@ -26,13 +26,13 @@ public class AlphaACORobotics
 		
 		// start time
 		time1 = System.currentTimeMillis();
-		while (turnCounter <= 2)
+		while (turnCounter < 3)
 		{
-			if (t1.ultraSonic() >= 150 && t1.ultraSonic() <= 1500)
+			if (t1.ultraSonic() >= 175 && t1.ultraSonic() <= 1500)
 			{
 				t2.forward();
 				System.out.println("Distance = " + t1.ultraSonic() + "mm");
-				Thread.sleep(350);
+				Thread.sleep(280);
 			}
 			else if (t1.ultraSonic() >= 1500)
 			{
@@ -47,35 +47,94 @@ public class AlphaACORobotics
 				// stop movement
 				t2.shutdown();
 				
-				// travel time calculation 
-				time2 = System.currentTimeMillis();
-				traveltime = (time2 - time1);
 				// turn counter increment 
 				turnCounter++;
 				
-				// int array node for node data storage
-				node = new int[]{turnCounter, turnDecision, (int) traveltime};
-				// arraylist to store the int array
-				nodeList.add(Arrays.toString(node));
-				
 				Thread.sleep(500);
 				
-				time1 = System.currentTimeMillis();
+				System.out.println("-------------------- " + "RESET" + " --------------------");
+				
 				traveltime = 0;
-				if (turnDecision == 0)
-				{
-					// left turn
-					t2.leftTurn();
+				// left turn
+				if (nextTurn == 0)
+				{				
+					// travel time calculation 
+					time2 = System.currentTimeMillis();
+					traveltime = (time2 - time1);
 					
-					turnDecision = 1;
+					// left turn is 0
+					t2.leftTurn();
+					System.out.println("Turn number " + turnCounter + " distance: " + t1.ultraSonic() + "mm");
+					Thread.sleep(2000);
+					
+					// turns left and detects if a wall is there...
+					if (t1.ultraSonic() <= 175)
+					{
+						
+						// turns 180 degrees
+						t2.rightTurn();
+						Thread.sleep(500);
+						t2.rightTurn();
+						Thread.sleep(1000);
+
+						System.out.println("Turn number " + turnCounter + " distance: " + t1.ultraSonic() + "mm");
+						Thread.sleep(1000);
+						
+						// detects if wall is there, if so then its a deadend
+						if (t1.ultraSonic() <= 175)
+						{
+							System.out.println("Deadend! Exiting...");
+							
+							t1.stop();
+							t2.stop();
+							t1.shutdown();
+							t2.shutdown();
+							break;
+						}
+						else
+						{
+							currentTurn = 1;
+							nextTurn = 0;
+
+							// travel time calculation 
+							time2 = System.currentTimeMillis();
+							traveltime = (time2 - time1);
+							time1 = System.currentTimeMillis();
+						}
+					}
+					else
+					{
+						currentTurn = 0;
+						nextTurn = 1;
+
+						// travel time calculation 
+						time2 = System.currentTimeMillis();
+						traveltime = (time2 - time1);
+						
+						time1 = System.currentTimeMillis();
+					}
 				}
-				else if (turnDecision == 1)
+				// right turn...
+				else if (nextTurn == 1)
 				{
+					currentTurn = 1;
+					nextTurn = 0;
+					
+					// travel time calculation 
+					time2 = System.currentTimeMillis();
+					traveltime = (time2 - time1);
+					
+					time1 = System.currentTimeMillis();
+					
 					// right turn
 					t2.rightTurn();
-					
-					turnDecision = 0;
+					System.out.println("Turn number " + turnCounter + " distance: " + t1.ultraSonic() + "mm");
+					Thread.sleep(1000);
 				}
+				// int array node for node data storage
+				node = new int[]{turnCounter, currentTurn, (int) traveltime};
+				// arraylist to store the int array
+				nodeList.add(Arrays.toString(node));
 				Thread.sleep(250);
 			}
 		}
@@ -94,5 +153,6 @@ public class AlphaACORobotics
 //		RPiCam.takePhoto();
 //		RPiCam.qrScan();
 		
+
 	}
 }
