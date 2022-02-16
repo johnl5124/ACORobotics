@@ -20,8 +20,6 @@ public class AlphaACORobotics
 		System.out.println("-------------------- " + t1.ultraSonic() + "mm" + " -------------------");
 		System.out.println("----------------------------------------------");
 		
-		Thread.sleep(1000);
-		
 		RobotMovement t2 = new RobotMovement("MovementThread");
 		
 		// start time
