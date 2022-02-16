@@ -29,7 +29,7 @@ public class RobotMovement implements Runnable
 	{
 		exit = true;
 	}
-	public void Forward()
+	public void forward()
 	{
 		int Velocity = 100;
 				
@@ -41,11 +41,28 @@ public class RobotMovement implements Runnable
 		SoftPwm.softPwmWrite(LEFT_Motor_Forward, Velocity);
 		SoftPwm.softPwmWrite(RIGHT_Motor_Forward, Velocity);		
 	}
-	public void LeftTurn()
+	
+
+	/* ---- NOTE ----
+	 * leftTurn() and rightTurn() will vary in int time as this differs depending on what
+	 * surface the robot is on and the strengths/condition of the motors...
+	 * 
+	 * An example is time = 668 (ms) gives a high chance of completing an exact
+	 * 90 degree turn however this may not be the same on wood or carpet...
+	 * 
+	 * Over the time of running the program, one can expect to see a dramatic difference
+	 * in movement results as for a multitude of reasons... such as: surface texture, 
+	 * GPIO motor inconsistencies, malfunctions and inconsistent ultrasonic detections. 
+	 * 
+	 * Throughout running a program, if a slight mistake occurs this can lead to more 
+	 * impactful problems further into program runtime. Chaos theory...
+	 */
+	
+	public void leftTurn()
 	{
 		motors.high();
 
-		int time = 625;
+		int time = 668;
 		int LEFT_Motor_Backward = 10;
 		int RIGHT_Motor_Forward = 12;
 		SoftPwm.softPwmCreate(LEFT_Motor_Backward, 0, 100);
@@ -75,11 +92,11 @@ public class RobotMovement implements Runnable
 		motors.low();
 		gpio.shutdown();
 	}
-	public void RightTurn()
+	public void rightTurn()
 	{
 		motors.high();
 
-		int time = 625;
+		int time = 668;
 		int LEFT_Motor_Forward = 14;
 		int RIGHT_Motor_Backward = 13;
 		SoftPwm.softPwmCreate(LEFT_Motor_Forward, 0, 100);
@@ -118,6 +135,6 @@ public class RobotMovement implements Runnable
 	@Override
 	public void run() 
 	{	
-		Forward();
+		forward();
 	}
 }
